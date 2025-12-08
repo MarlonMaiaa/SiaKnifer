@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Bloqueio/Desbloqueio em Massa</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Sistema de Bloqueio/Desbloqueio em Massa</h1>
+            </div>
+            <div class="version">v2.0</div>
+        </header>
+
+        <!-- Menu Lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-bars"></i> Menu</h3>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li class="active"><a href="#" id="menu-processar"><i class="fas fa-cogs"></i> Processar</a></li>
+                    <li><a href="#" id="menu-historico"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="#" id="menu-config"><i class="fas fa-cog"></i> Configurações</a></li>
+                    <li><a href="#" id="menu-ajuda"><i class="fas fa-question-circle"></i> Ajuda</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Usuário: Admin</span>
+                </div>
+                <button class="btn-logout" id="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Seção de Processamento -->
+            <section id="processar-section" class="content-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-cogs"></i> Processamento em Lote</h2>
+                    <p>Processe múltiplos registros de bloqueio ou desbloqueio</p>
+                </div>
+
+                <!-- Card de Operação -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-sliders-h"></i> Configuração da Operação</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Tipo de Operação:</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="operacao" value="bloqueio" checked>
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-text">
+                                        <i class="fas fa-lock"></i> Bloqueio
+                                    </span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="operacao" value="desbloqueio">
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-text">
+                                        <i class="fas fa-unlock"></i> Desbloqueio
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="data-group">
+                            <label for="data"><i class="far fa-calendar-alt"></i> Data (DD/MM/AAAA):</label>
+                            <input type="text" id="data" placeholder="DD/MM/AAAA" value="">
+                            <button class="btn-today" id="btn-hoje"><i class="fas fa-calendar-day"></i> Hoje</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Dados de Entrada -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-database"></i> Dados de Entrada</h3>
+                        <div class="card-actions">
+                            <button class="btn-icon" id="btn-exemplo" title="Carregar Exemplo">
+                                <i class="fas fa-file-import"></i> Exemplo
+                            </button>
+                            <button class="btn-icon" id="btn-limpar" title="Limpar Campos">
+                                <i class="fas fa-broom"></i> Limpar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-columns">
+                            <div class="input-column">
+                                <label><i class="fas fa-id-card"></i> CPFs/Matrículas (um por linha):</label>
+                                <div class="textarea-container">
+                                    <textarea id="cpfs" rows="12" placeholder="Digite ou cole os CPFs/Matrículas, um por linha..."></textarea>
+                                    <div class="textarea-counter" id="cpf-counter">0 registros</div>
+                                </div>
+                            </div>
+                            
+                            <div class="input-column">
+                                <label><i class="fas fa-user"></i> Nomes (mesma ordem):</label>
+                                <div class="textarea-container">
+                                    <textarea id="nomes" rows="12" placeholder="Digite ou cole os nomes, na mesma ordem dos CPFs..."></textarea>
+                                    <div class="textarea-counter" id="nome-counter">0 registros</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="validation-status" id="validation-status">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Aguardando entrada de dados...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Ações -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-play-circle"></i> Ações</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="action-buttons">
+                            <button class="btn-primary" id="btn-processar">
+                                <i class="fas fa-play"></i> Processar Dados
+                            </button>
+                            <button class="btn-secondary" id="btn-download">
+                                <i class="fas fa-download"></i> Baixar Resultado
+                            </button>
+                            <button class="btn-secondary" id="btn-copiar">
+                                <i class="far fa-copy"></i> Copiar Resultado
+                            </button>
+                            <button class="btn-secondary" id="btn-imprimir">
+                                <i class="fas fa-print"></i> Imprimir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Resultados -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Resultado</h3>
+                        <div class="card-actions">
+                            <div class="result-stats">
+                                <span id="result-count">0 registros processados</span>
+                                <span class="result-type" id="result-type">BLOQUEIO</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="result-container">
+                            <textarea id="resultado" rows="10" readonly placeholder="O resultado aparecerá aqui..."></textarea>
+                            <div class="result-info">
+                                <div class="info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Processado em: <span id="process-time">--:--:--</span></span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>Formato: CPF;NOME;DATA;;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Histórico (oculta inicialmente) -->
+            <section id="historico-section" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Histórico de Processamentos</h2>
+                    <p>Registros anteriores processados pelo sistema</p>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div id="historico-content">
+                            <p>Carregando histórico...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Configurações (oculta inicialmente) -->
+            <section id="config-section" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
+                    <p>Personalize as configurações do sistema</p>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p>Configurações serão implementadas em breve...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Ajuda (oculta inicialmente) -->
+            <section id="ajuda-section" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-question-circle"></i> Ajuda e Suporte</h2>
+                    <p>Informações sobre como usar o sistema</p>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h3><i class="fas fa-info-circle"></i> Como usar o sistema:</h3>
+                        <ol>
+                            <li>Selecione o tipo de operação (Bloqueio ou Desbloqueio)</li>
+                            <li>Para bloqueio, informe a data no formato DD/MM/AAAA</li>
+                            <li>Cole os CPFs/Matrículas no campo esquerdo (um por linha)</li>
+                            <li>Cole os nomes no campo direito (mesma ordem dos CPFs)</li>
+                            <li>Clique em "Processar Dados"</li>
+                            <li>Use os botões para baixar, copiar ou imprimir o resultado</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Rodapé -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p><i class="far fa-copyright"></i> 2024 Sistema de Bloqueio/Desbloqueio. Todos os direitos reservados.</p>
+                </div>
+                <div class="footer-right">
+                    <p><i class="fas fa-sync-alt"></i> Status: <span id="system-status" class="status-active">Online</span></p>
+                    <p><i class="fas fa-server"></i> Última atualização: <span id="last-update">Carregando...</span></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Confirmação</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Tem certeza que deseja prosseguir?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="modal-cancel">Cancelar</button>
+                <button class="btn-primary" id="modal-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
